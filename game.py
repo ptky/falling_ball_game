@@ -1,4 +1,7 @@
-import keyboard,time
+from pynput import keyboard
+import os
+import time
+pointer_index = 0
 def map_generate(size_x,size_y):
      map_data = {}
      for i in range(1,size_x*size_y+1):
@@ -15,28 +18,40 @@ def render_map(map_data,size_x,size_y):
           
 def render_pointer(map_data,size_x,size_y):
      total = size_x*size_y
-     map_data[size_x*size_y-size_x+1+(size_x//2)] = "_"
+     map_data[size_x*size_y-size_x+1+(size_x//2)+pointer_index] = "_"
      return map_data
 
-def move_pointer(map_data,size_x,size_y):
-     pointer_pos = size_x*size_y-size_x+1+(size_x//2)
-     for i in range(size_x*size_y-size_x+1, size_x*size_y+1):
-        map_data[i] = " "
-     if keyboard.is_pressed("d") and pointer_pos < size_x*size_y:
-          pointer_pos += 1
-     elif keyboard.is_pressed("a") and pointer_pos > size_x*size_y-size_x+1:
-          pointer_pos -= 1
 
-     map_data[pointer_pos] = "_"
-     return map_data, pointer_pos
+def move(direction,map_data,size_x,size_y):
+     global pointer_index
+     os.system("clear")
+     map_data[size_x*size_y-size_x+1+(size_x//2)+pointer_index] = " "
+     if direction == 1 and pointer_index > -(size_x//2):
+          pointer_index-=1
+     elif direction == 2 and pointer_index < (size_x//2):
+          pointer_index+=1
+     map_data = render_pointer(map_data, size_x, size_y)
+     render_map(map_data, size_x, size_y)
 
-data,size_x,size_y = map_generate(15,5)
-print(data)
-rendered_info = render_map(data,size_x,size_y)
-pointer = render_pointer(map_data=rendered_info,size_x=size_x,size_y=size_y)
-render_map(pointer,size_x=size_x,size_y=size_y)
-while True:
-    moved,changed = move_pointer(map_data=pointer, size_x=size_x, size_y=size_y)
-    if changed:
-     render_map(moved, size_x,size_y)
-     time.sleep(0.1)
+
+
+
+data, size_x, size_y = map_generate(15, 5)
+pointer = render_pointer(data, size_x, size_y)
+render_map(pointer, size_x, size_y)
+
+def on_press(key):
+    try:
+        if key.char == "a":
+             move(direction=1, map_data=pointer, size_x=size_x, size_y=size_y)
+        elif key.char == "d":
+            move(direction=2, map_data=pointer, size_x=size_x, size_y=size_y)
+    except AttributeError:
+        pass 
+
+def on_release(key):
+    if key == keyboard.Key.esc:
+        return False
+
+with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+    listener.join()
