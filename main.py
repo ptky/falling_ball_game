@@ -20,7 +20,6 @@ ball_thread = threading.Thread(
     target=game.drop_ball,
     args=(pointer, size_x, size_y, BALL_SPEED, OS_MODE)
 )
-ball_thread.daemon = True
 ball_thread.start()
 
 def on_press(key):
