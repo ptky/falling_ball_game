@@ -1,0 +1,21 @@
+import game
+from pynput import keyboard
+import threading
+
+data, size_x, size_y = game.map_generate(15, 5)
+pointer = game.render_pointer(data, size_x, size_y)
+
+game.render_map(pointer, size_x, size_y)
+
+ball_thread = threading.Thread(
+    target=game.drop_ball,
+    args=(pointer, size_x, size_y)
+)
+ball_thread.daemon = True
+ball_thread.start()
+
+def on_press(key):
+    game.on_press(key, pointer, size_x, size_y)
+
+with keyboard.Listener(on_press=on_press) as listener:
+    listener.join()

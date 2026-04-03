@@ -6,6 +6,7 @@ pointer_index = 0
 ball_index = 0
 points = 0
 lives = 3
+run = True
 clear = lambda: os.system('cls')
 def map_generate(size_x,size_y):
      map_data = {}
@@ -40,7 +41,7 @@ def move(direction,map_data,size_x,size_y):
      clear()
      render_map(map_data, size_x, size_y)
 
-def delete_old_ball(map_data):
+def delete_old_ball(map_data,size_x,size_y):
      for i in range(1, size_x*size_y+1):
             if map_data[i] == "O":
                 map_data[i] = " "
@@ -49,9 +50,10 @@ def drop_ball(map_data,size_x,size_y):
      global ball_index
      global points
      global lives
+     global run
      y = 0
      x_cord = random.randint(0,size_x-1)
-     while True:
+     while run:
           if lives == 0:
                time.sleep(0.3)
                clear()
@@ -60,11 +62,15 @@ def drop_ball(map_data,size_x,size_y):
                qstn = int(input("Wanna retry? (1 = Yes, 2 = No): "))
                if qstn == 1:
                     lives = 3
+                    points = 0
                     continue
                elif qstn == 2:
-                    exit(0)
+                    run = False
+                    break
+                    
+                    
 
-          delete_old_ball(map_data=map_data)
+          delete_old_ball(map_data=map_data,size_x=size_x,size_y=size_y)
           
           index = y * size_x + x_cord + 1
           #if you are on windows you need this: clear()
@@ -91,17 +97,8 @@ def drop_ball(map_data,size_x,size_y):
 
      #alapvetoen szeretnem ugy megcsinalni, hogy folyamatosan esnek a labdak es a chatgpt-vel otleteltem,
      #hogyan lehetne ugy megcsinalni, hogy ne bugoljon szet a console es azt irta a threading modulelal megtudom oldani
-     
-     
 
-data, size_x, size_y = map_generate(15, 5) # páratlannak kell lennie az x-nek hogy legyen kozepe
-pointer = render_pointer(data, size_x, size_y)
-render_map(pointer, size_x, size_y)
-ball_thread = threading.Thread(target=drop_ball, args=(pointer, size_x, size_y))
-ball_thread.daemon = True 
-ball_thread.start()
-
-def on_press(key):
+def on_press(key,pointer,size_x,size_y):
     global points,lives
     try:
         if key.char == "a":
@@ -118,6 +115,3 @@ def on_press(key):
 def on_release(key):
     if key == keyboard.Key.esc:
         return False
-
-with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
-    listener.join()
