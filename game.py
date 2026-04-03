@@ -7,6 +7,8 @@ ball_index = 0
 points = 0
 lives = 3
 run = True
+game_over = False
+
 clear = lambda: os.system('cls')
 def map_generate(size_x,size_y):
      map_data = {}
@@ -51,18 +53,21 @@ def drop_ball(map_data,size_x,size_y,speed):
      global points
      global lives
      global run
+     global game_over
      y = 0
      x_cord = random.randint(0,size_x-1)
      while run:
-          if lives == 0:
-               time.sleep(0.3)
+          if lives == 0 and not game_over:
+               game_over = True
                clear()
                print("Game Over!\n")
                print(f"Your total score: {points}")
                qstn = int(input("Wanna retry? (1 = Yes, 2 = No): "))
                if qstn == 1:
                     lives = 3
+                    game_over = False
                     points = 0
+                    y = 0
                     continue
                elif qstn == 2:
                     run = False
@@ -100,6 +105,8 @@ def drop_ball(map_data,size_x,size_y,speed):
 
 def on_press(key,pointer,size_x,size_y):
     global points,lives
+    if game_over:
+         return
     try:
         if key.char == "a":
              move(direction=1, map_data=pointer, size_x=size_x, size_y=size_y)
