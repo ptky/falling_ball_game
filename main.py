@@ -38,7 +38,7 @@ if start.lower() == "y":
         return game.on_press(key, pointer, size_x, size_y, OS_MODE)
 
     with keyboard.Listener(on_press=on_press,on_release=game.on_release) as listener:
-        listener.join()
+        listener.join()                             
 else:
     exit(0)
 

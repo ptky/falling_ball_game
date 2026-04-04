@@ -111,6 +111,7 @@ def drop_ball(map_data,size_x,size_y,speed,mode):
                y += 1
 
           map_data[index] = "O"
+          render_pointer(map_data, size_x, size_y)
 
           clear(mode=mode)
           render_map(map_data, size_x)
