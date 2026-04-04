@@ -26,12 +26,20 @@ def map_generate(size_x,size_y):
           map_data[i] = " "
      return map_data,size_x,size_y
 
-def render_map(map_data,size_x,size_y):
+def render_map(map_data,size_x):
      for i in range(1,len(map_data)+1):
-          if i % size_x == 0:
-               print(map_data[i])
+          x = (i-1) % size_x
+          
+          if x == 0 or x == (size_x - 1):
+               data = "#"
           else:
-               print(map_data[i],end="")
+               data = map_data[i]
+          if i % size_x == 0:
+               print(data)
+          else:
+               print(data,end="")
+
+          
      return map_data
           
 def render_pointer(map_data,size_x,size_y):
@@ -45,13 +53,13 @@ def move(direction,map_data,size_x,size_y,mode):
      #if you are on windows you need this: clear()
      #if you are using mac os you need this: os.system("clear")
      map_data[size_x*size_y-size_x+1+(size_x//2)+pointer_index] = " "
-     if direction == 1 and pointer_index > -(size_x//2):
+     if direction == 1 and pointer_index > -(size_x//2 -1):
           pointer_index-=1
-     elif direction == 2 and pointer_index < (size_x//2):
+     elif direction == 2 and pointer_index < (size_x//2 -1):
           pointer_index+=1
      map_data = render_pointer(map_data, size_x, size_y)
      clear(mode=mode)
-     render_map(map_data, size_x, size_y)
+     render_map(map_data, size_x)
 
 def delete_old_ball(map_data,size_x,size_y):
      for i in range(1, size_x*size_y+1):
@@ -65,7 +73,7 @@ def drop_ball(map_data,size_x,size_y,speed,mode):
      global run
      global game_over
      y = 0
-     x_cord = random.randint(0,size_x-1)
+     x_cord = random.randint(1,size_x-2)
      while run:
           if lives == 0 and not game_over:
                game_over = True
@@ -97,7 +105,7 @@ def drop_ball(map_data,size_x,size_y,speed,mode):
             elif map_data[index] == " ":
                  lives-=1
             y = 0
-            x_cord = random.randint(0, size_x-1)
+            x_cord = random.randint(1,size_x-2)
 
           else:
                y += 1
@@ -105,7 +113,7 @@ def drop_ball(map_data,size_x,size_y,speed,mode):
           map_data[index] = "O"
 
           clear(mode=mode)
-          render_map(map_data, size_x, size_y)
+          render_map(map_data, size_x)
           print(f"Points: {points}")
           print(f"Lives left: {lives}")
 

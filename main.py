@@ -14,7 +14,7 @@ OS_MODE = int(config["GAME"]["OS_MODE"])
 data, size_x, size_y = game.map_generate(MAP_WIDTH, MAP_HEIGHT)
 pointer = game.render_pointer(data, size_x, size_y)
 
-game.render_map(pointer, size_x, size_y)
+game.render_map(pointer, size_x)
 
 ball_thread = threading.Thread(
     target=game.drop_ball,
