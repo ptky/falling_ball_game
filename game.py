@@ -9,7 +9,6 @@ lives = 3
 run = True
 game_over = False
 
-
 def clear(mode):
      if mode == 1:
           os.system('cls' if os.name=='nt' else 'clear')
@@ -89,8 +88,9 @@ def drop_ball(map_data,size_x,size_y,speed,mode):
                     y = 0
                     continue
                elif qstn == 2:
+                    print("Click a random button on your keyboard.")
                     run = False
-                    exit(0)
+                    return
                     
                     
 
@@ -124,8 +124,9 @@ def drop_ball(map_data,size_x,size_y,speed,mode):
 
 def on_press(key,pointer,size_x,size_y,mode):
     global points,lives
-    if game_over:
-         return
+    if not run:
+        return False
+
     try:
         if key.char == "a":
              move(direction=1, map_data=pointer, size_x=size_x, size_y=size_y,mode=mode)
